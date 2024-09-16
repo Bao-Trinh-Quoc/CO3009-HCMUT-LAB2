@@ -1,0 +1,8 @@
+# STM32CubeIDE
+*/Src/.metadata/
+.settings/
+/Debug/
+.mxproject
+
+# VSCode
+/.vscode/
