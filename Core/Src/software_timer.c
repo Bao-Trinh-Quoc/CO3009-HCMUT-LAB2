@@ -7,24 +7,40 @@
 
 #include "software_timer.h"
 
-int timer_counter = 0;
-int timer_flag = 0;
+int timer_counter[NUM_TIM];
+int timer_flag[NUM_TIM];
 
-void setTimer(int duration)
+void setTimer(int index, int counter)
 {
-	timer_counter = duration;
-	timer_flag = 0;
+	if (index < NUM_TIM)
+	{
+		timer_flag[index] = 0;
+		timer_counter[index] = counter / TICK;
+	}
 }
 
 void timerRun()
 {
-	if (timer_counter > 0)
+    for (int i = 0; i < NUM_TIM; i++)
+    {
+        if (timer_counter[i] >= 0)
+        {
+            timer_counter[i] --;
+            if (timer_counter[i] <= 0)
+            {
+                timer_flag[i] = 1;
+            }
+        }
+    }
+}
+
+int getTimerFlag(int index)
+{
+	if (index < NUM_TIM)
 	{
-		timer_counter--;
-		if (timer_counter <= 0)
-		{
-			timer_flag = 1;
-		}
+		return timer_flag[index];
 	}
+
+	return -1;	// Error
 }
 

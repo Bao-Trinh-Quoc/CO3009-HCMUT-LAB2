@@ -131,7 +131,7 @@ int main(void)
   HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
 
-  setTimer(50);
+  setTimer(0, 500);
   int seg_num = 0;
   /* USER CODE END 2 */
 
@@ -139,9 +139,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if (timer_flag == 1)
+	  if (getTimerFlag(0))
 		  {
-			  setTimer(50);
+			  setTimer(0, 500);
 			  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
 			  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
 			  switch (seg_num)
