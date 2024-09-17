@@ -9,7 +9,7 @@
 #define INC_SOFTWARE_TIMER_H_
 
 #define TICK 10
-#define NUM_TIM 2
+#define NUM_TIM 3
 
 void setTimer(int index, int counter);
 int getTimerFlag(int index);

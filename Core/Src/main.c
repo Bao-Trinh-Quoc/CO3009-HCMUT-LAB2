@@ -60,41 +60,42 @@ void display7SEG(int num)
 {
 	switch (num)
 	{
-	case 0:
-		GPIOB->ODR = 0b1000000; // GFEDCBA
-		break;
-	case 1:
-		GPIOB->ODR = 0b1111001; // GFEDCBA
-		break;
-	case 2:
-		GPIOB->ODR = 0b0100100; // GFEDCBA
-		break;
-	case 3:
-		GPIOB->ODR = 0b0110000; // GFEDCBA
-		break;
-	case 4:
-		GPIOB->ODR = 0b0011001; // GFEDCBA
-		break;
-	case 5:
-		GPIOB->ODR = 0b0010010; // GFEDCBA
-		break;
-	case 6:
-		GPIOB->ODR = 0b0000010; // GFEDCBA
-		break;
-	case 7:
-		GPIOB->ODR = 0b1111000; // GFEDCBA
-		break;
-	case 8:
-		GPIOB->ODR = 0b0000000; // GFEDCBA
-		break;
-	case 9:
-		GPIOB->ODR = 0b0010000; // GFEDCBA
-		break;
-	default:
-		break;
+		case 0:
+			GPIOB->ODR = 0b1000000; // GFEDCBA
+			break;
+		case 1:
+			GPIOB->ODR = 0b1111001; // GFEDCBA
+			break;
+		case 2:
+			GPIOB->ODR = 0b0100100; // GFEDCBA
+			break;
+		case 3:
+			GPIOB->ODR = 0b0110000; // GFEDCBA
+			break;
+		case 4:
+			GPIOB->ODR = 0b0011001; // GFEDCBA
+			break;
+		case 5:
+			GPIOB->ODR = 0b0010010; // GFEDCBA
+			break;
+		case 6:
+			GPIOB->ODR = 0b0000010; // GFEDCBA
+			break;
+		case 7:
+			GPIOB->ODR = 0b1111000; // GFEDCBA
+			break;
+		case 8:
+			GPIOB->ODR = 0b0000000; // GFEDCBA
+			break;
+		case 9:
+			GPIOB->ODR = 0b0010000; // GFEDCBA
+			break;
+		default:
+			break;
 	}
 }
 
+const int MAX_LED = 4;
 int index_led = 0;
 int led_buffer[4] = {1, 9, 0 ,4};
 void update7SEG(int index)
@@ -133,6 +134,21 @@ void update7SEG(int index)
 int hour = 15, minute = 8, second = 58;
 void updateClockBuffer()
 {
+    second++;
+	if (second >= 60)
+	{
+		second = 0;
+		minute++;
+	}
+	if (minute >= 60)
+	{
+		minute = 0;
+		hour++;
+	}
+	if (hour >= 24)
+	{
+		hour = 0;
+	}
 	led_buffer[0] = hour / 10;
 	led_buffer[1] = hour % 10;
 	led_buffer[2] = minute / 10;
@@ -179,43 +195,31 @@ int main(void)
 
 
 
-//  setTimer(0, 1000);
-//  setTimer(1, 1000);
+  setTimer(0, 10);	// I want the precision
+  setTimer(1, 10);
+  setTimer(2, 10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	  if (getTimerFlag(0) == 1)
-//		  {
-//			  setTimer(0, 1000);
-//			  update7SEG(index_led);
-//			  index_led = (++index_led < 4) ? index_led : 0;
-//		  }
-//	  if (getTimerFlag(1) == 1)
-//	  {
-//		  setTimer(1, 1000);
-//		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
-//	  }
-	    second++;
-		if (second >= 60)
-		{
-			second = 0;
-			minute++;
-		}
-		if (minute >= 60)
-		{
-			minute = 0;
-			hour++;
-		}
-		if (hour >= 24)
-		{
-			hour = 0;
-		}
-		updateClockBuffer();
-		HAL_Delay(1000);
-
+	  if (getTimerFlag(0) == 1)
+	  {
+		  setTimer(0, 1000);
+		  update7SEG(index_led);
+		  index_led = (++index_led < MAX_LED) ? index_led : 0;
+	  }
+	  if (getTimerFlag(1) == 1)
+	  {
+		  setTimer(1, 1000);
+		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+	  }
+	  if (getTimerFlag(2) == 1)
+	  {
+		  setTimer(2, 1000);
+		  updateClockBuffer();
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -350,31 +354,9 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-//  const int MAX_LED = 4;
-int counter = 100;
-int counter2 = 100;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	if (counter >= 0)
-	{
-		counter--;
-		if (counter <= 0)
-		{
-			update7SEG(index_led);
-			index_led = (++index_led < 4) ? index_led : 0;
-			counter = 100;
-		}
-	}
-
-	if (counter2 >= 0)
-	{
-		counter2--;
-		if (counter2 <= 0)
-		{
-			HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
-			counter2 = 100;
-		}
-	}
+	timerRun();
 }
 /* USER CODE END 4 */
 
