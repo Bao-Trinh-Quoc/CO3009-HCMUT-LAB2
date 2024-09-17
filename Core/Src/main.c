@@ -134,9 +134,6 @@ int main(void)
   HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
 
-  setTimer(0, 500);
-  setTimer(1, 1000);
-
 //  const int MAX_LED = 4;
   int index_led = 0;
   int led_buffer[4] = {1, 9, 0 ,4};
@@ -172,6 +169,9 @@ int main(void)
   		break;
   	}
   }
+
+  setTimer(0, 1000);
+  setTimer(1, 1000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -180,7 +180,7 @@ int main(void)
   {
 	  if (getTimerFlag(0) == 1)
 		  {
-			  setTimer(0, 500);
+			  setTimer(0, 1000);
 			  update7SEG(index_led);
 			  index_led = (++index_led < 4) ? index_led : 0;
 		  }
