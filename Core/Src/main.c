@@ -94,6 +94,7 @@ void display7SEG(int num)
 		break;
 	}
 }
+
 /* USER CODE END 0 */
 
 /**
@@ -135,7 +136,42 @@ int main(void)
 
   setTimer(0, 500);
   setTimer(1, 1000);
-  int seg_num = 0;
+
+//  const int MAX_LED = 4;
+  int index_led = 0;
+  int led_buffer[4] = {1, 9, 0 ,4};
+  void update7SEG(int index)
+  {
+  	HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
+  	HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
+  	HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
+  	HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
+  	switch (index)
+  	{
+  	case 0:
+  		// Display the first 7 SEG with led_buffer [0]
+  		HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_RESET);
+  		display7SEG(led_buffer[0]);
+  		break;
+  	case 1:
+  		// Display the second 7 SEG with led_buffer [1]
+  		HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_RESET);
+  		display7SEG(led_buffer[1]);
+  		break;
+  	case 2:
+  		// Display the third 7 SEG with led_buffer [2]
+  		HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_RESET);
+  		display7SEG(led_buffer[2]);
+  		break;
+  	case 3:
+  		// Display the forth 7 SEG with led_buffer [3]
+  		HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_RESET);
+  		display7SEG(led_buffer[3]);
+  		break;
+  	default:
+  		break;
+  	}
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -145,36 +181,8 @@ int main(void)
 	  if (getTimerFlag(0) == 1)
 		  {
 			  setTimer(0, 500);
-			  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
-			  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
-			  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
-			  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
-			  switch (seg_num)
-			  {
-				case 0:
-					HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_RESET);
-					display7SEG(1);
-					break;
-
-				case 1:
-					HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_RESET);
-					display7SEG(2);
-					break;
-
-				case 2:
-					HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_RESET);
-					display7SEG(3);
-					break;
-
-				case 3:
-					HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_RESET);
-					display7SEG(0);
-					break;
-
-				default:
-					break;
-			}
-			seg_num = (++seg_num < 4) ? seg_num : 0;
+			  update7SEG(index_led);
+			  index_led = (++index_led < 4) ? index_led : 0;
 		  }
 	  if (getTimerFlag(1) == 1)
 	  {
