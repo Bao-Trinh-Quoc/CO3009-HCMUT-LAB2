@@ -51,7 +51,7 @@ int hour = 15, minute = 8, second = 58;
 
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
-//int shift = -8;
+int shift = -8;
 //uint8_t matrix_buffer[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
 uint8_t matrix_buffer[8] = {
 	0b00011000,
@@ -153,6 +153,8 @@ int main(void)
 	  {
 		  setTimer(3, 10);
 		  updateLEDMatrix(index_led_matrix);
+		  if (index_led_matrix == 0)
+			  shift = (++shift < 8) ? shift : -8;
 		  index_led_matrix = (++index_led_matrix < MAX_LED_MATRIX) ? index_led_matrix : 0;
 	  }
     /* USER CODE END WHILE */
@@ -413,8 +415,9 @@ void updateLEDMatrix(int index)
 	// COL (reverse value BRR <-> BSRR)
 	GPIOA->BSRR = ((1 << 2) - 1) << 2;								   // Reset first 2 bits start at PA2
 	GPIOA->BSRR = ((1 << 6) - 1) << 10;								   // Reset last 6 bits start at PA10
-	GPIOA->BRR = ((matrix_buffer[index] >> 0) & ((1 << 2) - 1)) << 2;  // Set first 2 bits start at PA2
-	GPIOA->BRR = ((matrix_buffer[index] >> 2) & ((1 << 6) - 1)) << 10; // Set last 6 bits start at PA10
+	int shifted_buffer = (shift < 0) ? (matrix_buffer[index] >> -shift) : (matrix_buffer[index] << shift);
+	GPIOA->BRR = ((shifted_buffer >> 0) & ((1 << 2) - 1)) << 2;	 // Set first 2 bits start at PA2
+	GPIOA->BRR = ((shifted_buffer >> 2) & ((1 << 6) - 1)) << 10; // Set last 6 bits start at PA10
 }
 /* USER CODE END 4 */
 
