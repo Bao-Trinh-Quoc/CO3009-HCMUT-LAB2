@@ -63,6 +63,13 @@ uint8_t matrix_buffer[8] = {
 	0b01100110,
 	0b01100110,
 };
+
+//HEART
+//uint8_t matrix_buffer[8] = {
+//		0x00, 0x0E, 0x11, 0x21, 0x42, 0x21, 0x11, 0x0E
+//};
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

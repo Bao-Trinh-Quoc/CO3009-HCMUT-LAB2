@@ -21,6 +21,7 @@ void setTimer(int index, int counter)
 
 void timerRun()
 {
+    // needed to optimize this to O(1)
     for (int i = 0; i < NUM_TIM; i++)
     {
         if (timer_counter[i] >= 0)
