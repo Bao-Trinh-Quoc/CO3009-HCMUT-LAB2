@@ -206,7 +206,7 @@ int main(void)
   {
 	  if (getTimerFlag(0) == 1)
 	  {
-		  setTimer(0, 1000);
+		  setTimer(0, 250);
 		  update7SEG(index_led);
 		  index_led = (++index_led < MAX_LED) ? index_led : 0;
 	  }
